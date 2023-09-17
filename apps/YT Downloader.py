@@ -18,6 +18,7 @@ def startDownload():
         download.configure(state='normal')
     except:
         finishLabel.configure(text="YouTube link is invalid", text_color='red')
+        download.configure(state='normal')
 
 
 def on_progress(stream, chunk, bytes_remaining):
