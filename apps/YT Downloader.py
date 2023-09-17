@@ -5,6 +5,7 @@ from pytube import YouTube
 def startDownload():
     try:
         progress.set(0)
+        download.configure(state='disabled')
         ytLink = link.get()
         ytObject = YouTube(ytLink, on_progress_callback=on_progress)
         video = ytObject.streams.get_highest_resolution()
@@ -14,6 +15,7 @@ def startDownload():
 
         video.download()
         finishLabel.configure(text="Download Complete!")
+        download.configure(state='normal')
     except:
         finishLabel.configure(text="YouTube link is invalid", text_color='red')
 

@@ -21,3 +21,4 @@
 apps/build/*
 apps/dist/*
 *.ico
+*.mp4
