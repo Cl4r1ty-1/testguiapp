@@ -52,6 +52,15 @@ link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
 link.pack()
 
 
+choosefolder = customtkinter.CTkButton(app, text="Choose where to download", command=select_folder)
+choosefolder.pack(padx=10, pady=10)
+
+folder_chosen = customtkinter.CTkLabel(app, text='')
+folder_chosen.pack()
+
+download = customtkinter.CTkButton(app, text="Download", command=startDownload)
+download.pack(padx=10, pady=5)
+
 finishLabel = customtkinter.CTkLabel(app, text='')
 finishLabel.pack()
 
@@ -61,16 +70,6 @@ pPercent.pack()
 progress = customtkinter.CTkProgressBar(app, width=400)
 progress.set(0)
 progress.pack(padx=10, pady=10)
-
-choosefolder = customtkinter.CTkButton(app, text="Choose where to download", command=select_folder)
-choosefolder.pack(padx=10, pady=10)
-
-folder_chosen = customtkinter.CTkLabel(app, text='')
-folder_chosen.pack()
-
-download = customtkinter.CTkButton(app, text="Download", command=startDownload)
-download.pack(padx=10, pady=10)
-
 
 
 app.mainloop()
