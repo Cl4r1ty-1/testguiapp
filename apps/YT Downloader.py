@@ -1,6 +1,7 @@
 import tkinter
 import customtkinter
 from pytube import YouTube
+from pytube import exceptions
 from tkinter import filedialog
 
 def startDownload():
@@ -9,18 +10,22 @@ def startDownload():
         download.configure(state='disabled')
         ytLink = link.get()
         ytObject = YouTube(ytLink, on_progress_callback=on_progress)
-        video = ytObject.streams.get_highest_resolution()
-
+        video = ytObject.streams.get_by_resolution(resolution=chooseResolution.get())
         title.configure(text=ytObject.title, text_color='white')
         finishLabel.configure(text='')
 
         video.download(output_path=file_path)
-        finishLabel.configure(text="Download Complete!")
+        finishLabel.configure(text="Download Complete!", text_color='white')
         download.configure(state='normal')
-    except:
-        finishLabel.configure(text="YouTube link is invalid or no/invalid directory selected", text_color='red')
+    except AttributeError:
+        finishLabel.configure(text="Try either 720p or 360p.", text_color='red')
         download.configure(state='normal')
-
+    except exceptions.RegexMatchError:
+        finishLabel.configure(text="YouTube link is invalid!", text_color='red')
+        download.configure(state='normal')
+    except NameError:
+        finishLabel.configure(text="No/invalid directory selected", text_color='red')
+        download.configure(state='normal')
 
 def on_progress(stream, chunk, bytes_remaining):
     total_size = stream.filesize
@@ -49,8 +54,11 @@ title.pack(padx=10, pady=10)
 
 url_var = tkinter.StringVar()
 link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
-link.pack()
+link.pack(pady=5)
 
+resolution = tkinter.StringVar()
+chooseResolution = customtkinter.CTkOptionMenu(app, values=["720p", "480p", "360p", "240p", "144p"])
+chooseResolution.pack(padx=10, pady=10)
 
 choosefolder = customtkinter.CTkButton(app, text="Choose where to download", command=select_folder)
 choosefolder.pack(padx=10, pady=10)
