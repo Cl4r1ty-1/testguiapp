@@ -1,6 +1,7 @@
 import tkinter
 import customtkinter
 from pytube import YouTube
+from tkinter import filedialog
 
 def startDownload():
     try:
@@ -13,11 +14,11 @@ def startDownload():
         title.configure(text=ytObject.title, text_color='white')
         finishLabel.configure(text='')
 
-        video.download()
+        video.download(output_path=file_path)
         finishLabel.configure(text="Download Complete!")
         download.configure(state='normal')
     except:
-        finishLabel.configure(text="YouTube link is invalid", text_color='red')
+        finishLabel.configure(text="YouTube link is invalid or no/invalid directory selected", text_color='red')
         download.configure(state='normal')
 
 
@@ -31,7 +32,12 @@ def on_progress(stream, chunk, bytes_remaining):
 
     progress.set(float(percentage_of_completion) / 100)
 
-customtkinter.set_appearance_mode("System")
+def select_folder():
+    global file_path
+    file_path = filedialog.askdirectory()
+    folder_chosen.configure(text=file_path)
+
+customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("blue")
 
 app = customtkinter.CTk()
@@ -55,6 +61,12 @@ pPercent.pack()
 progress = customtkinter.CTkProgressBar(app, width=400)
 progress.set(0)
 progress.pack(padx=10, pady=10)
+
+choosefolder = customtkinter.CTkButton(app, text="Choose where to download", command=select_folder)
+choosefolder.pack(padx=10, pady=10)
+
+folder_chosen = customtkinter.CTkLabel(app, text='')
+folder_chosen.pack()
 
 download = customtkinter.CTkButton(app, text="Download", command=startDownload)
 download.pack(padx=10, pady=10)
