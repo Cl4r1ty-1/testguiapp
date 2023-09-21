@@ -33,7 +33,7 @@ def startDownload():
         download.configure(state='normal')
         downloadmp3.configure(state='normal')
     except:
-        finishLabel.configure(text="An unknown error occurred. Please contact devs.")
+        finishLabel.configure(text="An unknown error occurred. Please contact devs.", text_color='red')
         download.configure(state='normal')
         downloadmp3.configure(state='normal')
 
@@ -68,7 +68,7 @@ def startAudioDownload():
         download.configure(state='normal')
         downloadmp3.configure(state='normal')
     except:
-        finishLabel.configure(text="An unknown error occurred. Please contact devs.")
+        finishLabel.configure(text="An unknown error occurred. Please contact devs.", text_color='red')
         download.configure(state='normal')
         downloadmp3.configure(state='normal')
 
