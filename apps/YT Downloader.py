@@ -9,6 +9,7 @@ def startDownload():
     try:
         progress.set(0)
         download.configure(state='disabled')
+        downloadmp3.configure(state='disabled')
         ytLink = link.get()
         ytObject = YouTube(ytLink, on_progress_callback=on_progress)
         video = ytObject.streams.get_by_resolution(resolution=chooseResolution.get())
@@ -17,16 +18,24 @@ def startDownload():
 
         video.download(output_path=file_path)
         finishLabel.configure(text="Download Complete!", text_color='white')
+        downloadmp3.configure(state='normal')
         download.configure(state='normal')
     except AttributeError:
         finishLabel.configure(text="Try either 720p or 360p.", text_color='red')
         download.configure(state='normal')
+        downloadmp3.configure(state='normal')
     except exceptions.RegexMatchError:
         finishLabel.configure(text="YouTube link is invalid!", text_color='red')
         download.configure(state='normal')
+        downloadmp3.configure(state='normal')
     except NameError:
         finishLabel.configure(text="No/invalid directory selected", text_color='red')
         download.configure(state='normal')
+        downloadmp3.configure(state='normal')
+    except:
+        finishLabel.configure(text="An unknown error occurred. Please contact devs.")
+        download.configure(state='normal')
+        downloadmp3.configure(state='normal')
 
 def startAudioDownload():
     try: 
@@ -42,7 +51,7 @@ def startAudioDownload():
         title.configure(text=ytObject.title, text_color='white')
         finishLabel.configure(text='')
 
-        out_file = video.download(output_path=file_path)
+        out_file = video.download(output_path=file_path, filename_prefix='audio_')
         base, ext = os.path.splitext(out_file)
         new_file = base + '.mp3'
         os.rename(out_file, new_file)
@@ -53,9 +62,15 @@ def startAudioDownload():
     except exceptions.RegexMatchError:
         finishLabel.configure(text="YouTube link is invalid!", text_color='red')
         download.configure(state='normal')
+        downloadmp3.configure(state='normal')
     except NameError:
         finishLabel.configure(text="No/invalid directory selected", text_color='red')
         download.configure(state='normal')
+        downloadmp3.configure(state='normal')
+    except:
+        finishLabel.configure(text="An unknown error occurred. Please contact devs.")
+        download.configure(state='normal')
+        downloadmp3.configure(state='normal')
 
 def on_progress(stream, chunk, bytes_remaining):
     total_size = stream.filesize
