@@ -1,3 +1,4 @@
+import os
 import tkinter
 import customtkinter
 from pytube import YouTube
@@ -20,6 +21,35 @@ def startDownload():
     except AttributeError:
         finishLabel.configure(text="Try either 720p or 360p.", text_color='red')
         download.configure(state='normal')
+    except exceptions.RegexMatchError:
+        finishLabel.configure(text="YouTube link is invalid!", text_color='red')
+        download.configure(state='normal')
+    except NameError:
+        finishLabel.configure(text="No/invalid directory selected", text_color='red')
+        download.configure(state='normal')
+
+def startAudioDownload():
+    try: 
+        progress.set(0)
+        downloadmp3.configure(state='disabled')
+        download.configure(state='disabled')
+        ytLink = link.get()
+        ytObject = YouTube(ytLink, on_progress_callback=on_progress)
+        for i in ytObject.streams.filter(only_audio=True):
+            if i.mime_type == "audio/mp4":
+                streamId = i.itag
+        video = ytObject.streams.get_by_itag(streamId)
+        title.configure(text=ytObject.title, text_color='white')
+        finishLabel.configure(text='')
+
+        out_file = video.download(output_path=file_path)
+        base, ext = os.path.splitext(out_file)
+        new_file = base + '.mp3'
+        os.rename(out_file, new_file)
+
+        finishLabel.configure(text="Download Complete!", text_color='white')
+        download.configure(state='normal')
+        downloadmp3.configure(state='normal')
     except exceptions.RegexMatchError:
         finishLabel.configure(text="YouTube link is invalid!", text_color='red')
         download.configure(state='normal')
@@ -68,6 +98,12 @@ folder_chosen.pack()
 
 download = customtkinter.CTkButton(app, text="Download", command=startDownload)
 download.pack(padx=10, pady=5)
+
+info_text = customtkinter.CTkLabel(app, text="If downloading audio only, don't worry about changing resolution.")
+info_text.pack(padx=10, pady=5)
+
+downloadmp3 = customtkinter.CTkButton(app, text="Download MP3 (Audio only)", command=startAudioDownload)
+downloadmp3.pack(padx=10, pady=5)
 
 finishLabel = customtkinter.CTkLabel(app, text='')
 finishLabel.pack()
