@@ -17,8 +17,12 @@
 *password*
 *.httr-oauth*
 
+# Pyinstaller files
 *.spec
 apps/build/*
 apps/dist/*
 *.ico
+
+# Incase a forgot to delete a video while testing 😂
 *.mp4
+*.mp3
