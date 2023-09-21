@@ -23,6 +23,6 @@ apps/build/*
 apps/dist/*
 *.ico
 
-# Incase a forgot to delete a video while testing 😂
+# Incase I forgot to delete a video while testing 😂
 *.mp4
 *.mp3
