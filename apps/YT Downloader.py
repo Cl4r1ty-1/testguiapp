@@ -4,6 +4,8 @@ import customtkinter
 from pytube import YouTube
 from pytube import exceptions
 from tkinter import filedialog
+from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
+
 
 def startDownload():
     try:
@@ -12,18 +14,35 @@ def startDownload():
         downloadmp3.configure(state='disabled')
         ytLink = link.get()
         ytObject = YouTube(ytLink, on_progress_callback=on_progress)
-        video = ytObject.streams.get_by_resolution(resolution=chooseResolution.get())
-        title.configure(text=ytObject.title, text_color='white')
-        finishLabel.configure(text='')
+        if chooseResolution.get() == '1080p':
+            for i in ytObject.streams.filter(resolution='1080p'):
+                if i.mime_type == 'video/mp4':
+                    streamId = i.itag
+            video = ytObject.streams.get_by_itag(streamId)
+            title.configure(text=ytObject.title, text_color='white')
+            finishLabel.configure(text='')
+            video_file = video.download(output_path=file_path, filename_prefix='video_')
+            for i in ytObject.streams.filter(only_audio=True):
+                if i.mime_type == "audio/mp4":
+                    audioStreamId = i.itag
+            audio = ytObject.streams.get_by_itag(audioStreamId)
+            audio_file = audio.download(output_path=file_path, filename_prefix='audio_')
+            video_clip = VideoFileClip(video_file)
+            audio_clip = AudioFileClip(audio_file)
+            final_clip = video_clip.set_audio(audio_clip)
+            final_clip.write_videofile(video.title + '.mp4')
+            os.remove(file_path + audio_file)
+            os.remove(file_path + video_file)
 
-        video.download(output_path=file_path)
+        else:
+            video = ytObject.streams.get_by_resolution(resolution=chooseResolution.get())
+            title.configure(text=ytObject.title, text_color='white')
+            finishLabel.configure(text='')
+
+            video.download(output_path=file_path)
         finishLabel.configure(text="Download Complete!", text_color='white')
         downloadmp3.configure(state='normal')
         download.configure(state='normal')
-    except AttributeError:
-        finishLabel.configure(text="Try either 720p or 360p.", text_color='red')
-        download.configure(state='normal')
-        downloadmp3.configure(state='normal')
     except exceptions.RegexMatchError:
         finishLabel.configure(text="YouTube link is invalid!", text_color='red')
         download.configure(state='normal')
@@ -32,10 +51,7 @@ def startDownload():
         finishLabel.configure(text="No/invalid directory selected", text_color='red')
         download.configure(state='normal')
         downloadmp3.configure(state='normal')
-    except:
-        finishLabel.configure(text="An unknown error occurred. Please contact devs.", text_color='red')
-        download.configure(state='normal')
-        downloadmp3.configure(state='normal')
+
 
 def startAudioDownload():
     try: 
@@ -102,7 +118,7 @@ link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
 link.pack(pady=5)
 
 resolution = tkinter.StringVar()
-chooseResolution = customtkinter.CTkOptionMenu(app, values=["720p", "480p", "360p", "240p", "144p"])
+chooseResolution = customtkinter.CTkOptionMenu(app, values=["1080p", "720p", "480p", "360p", "240p", "144p"])
 chooseResolution.pack(padx=10, pady=10)
 
 choosefolder = customtkinter.CTkButton(app, text="Choose where to download", command=select_folder)
