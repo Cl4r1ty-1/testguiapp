@@ -4,6 +4,7 @@ import customtkinter
 from pytube import YouTube
 from pytube import exceptions
 from tkinter import filedialog
+from datetime import datetime
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 
 
@@ -30,9 +31,11 @@ def startDownload():
             video_clip = VideoFileClip(video_file)
             audio_clip = AudioFileClip(audio_file)
             final_clip = video_clip.set_audio(audio_clip)
-            final_clip.write_videofile(video.title + '.mp4')
-            os.remove(file_path + audio_file)
-            os.remove(file_path + video_file)
+            now = datetime.now()
+            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+            final_clip.write_videofile('YouTubeDownload' + dt_string + '.mp4')
+            os.remove(audio_file)
+            os.remove(video_file)
 
         else:
             video = ytObject.streams.get_by_resolution(resolution=chooseResolution.get())
@@ -118,8 +121,11 @@ link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
 link.pack(pady=5)
 
 resolution = tkinter.StringVar()
-chooseResolution = customtkinter.CTkOptionMenu(app, values=["1080p", "720p", "480p", "360p", "240p", "144p"])
+chooseResolution = customtkinter.CTkOptionMenu(app, values=["720p", "480p", "360p", "240p", "144p", "1080p"])
 chooseResolution.pack(padx=10, pady=10)
+
+warningText = customtkinter.CTkLabel(app, text='Warning: 1080p downloads take a long time as there are many more steps to getting a 1080p YouTube video than just \ndownloading, please consider downloading 720p unless you absolutely have to get 1080p video. \nA 1080p download is complete when the download buttons are no longer greyed-out.', text_color='orange')
+warningText.pack()
 
 choosefolder = customtkinter.CTkButton(app, text="Choose where to download", command=select_folder)
 choosefolder.pack(padx=10, pady=10)
