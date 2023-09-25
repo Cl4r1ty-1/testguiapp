@@ -118,7 +118,7 @@ customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("blue")
 
 app = customtkinter.CTk()
-app.geometry("720x480")
+app.geometry("870x550")
 app.title("YT Downloader")
 
 title = customtkinter.CTkLabel(app, text="Insert a YouTube Link")
