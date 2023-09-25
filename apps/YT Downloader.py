@@ -46,12 +46,20 @@ def startDownload():
         finishLabel.configure(text="Download Complete!", text_color='white')
         downloadmp3.configure(state='normal')
         download.configure(state='normal')
+    except AttributeError:
+        finishLabel.configure(text="Try either 720p or 360p.", text_color='red')
+        download.configure(state='normal')
+        downloadmp3.configure(state='normal')
     except exceptions.RegexMatchError:
         finishLabel.configure(text="YouTube link is invalid!", text_color='red')
         download.configure(state='normal')
         downloadmp3.configure(state='normal')
     except NameError:
         finishLabel.configure(text="No/invalid directory selected", text_color='red')
+        download.configure(state='normal')
+        downloadmp3.configure(state='normal')
+    except:
+        finishLabel.configure(text="An unknown error occurred. Please contact devs.", text_color='red')
         download.configure(state='normal')
         downloadmp3.configure(state='normal')
 
