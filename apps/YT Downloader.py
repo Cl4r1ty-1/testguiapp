@@ -125,7 +125,7 @@ title = customtkinter.CTkLabel(app, text="Insert a YouTube Link")
 title.pack(padx=10, pady=10)
 
 url_var = tkinter.StringVar()
-link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
+link = customtkinter.CTkEntry(app, width=400, height=40, textvariable=url_var)
 link.pack(pady=5)
 
 resolution = tkinter.StringVar()
