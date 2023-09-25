@@ -32,8 +32,8 @@ def startDownload():
             audio_clip = AudioFileClip(audio_file)
             final_clip = video_clip.set_audio(audio_clip)
             now = datetime.now()
-            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-            final_clip.write_videofile('YouTubeDownload' + dt_string + '.mp4')
+            dt_string = now.strftime(" %d%m%Y %H%M%S")
+            final_clip.write_videofile(file_path + '/' + 'YouTubeDownload' + dt_string + '.mp4')
             os.remove(audio_file)
             os.remove(video_file)
 
@@ -124,7 +124,7 @@ resolution = tkinter.StringVar()
 chooseResolution = customtkinter.CTkOptionMenu(app, values=["720p", "480p", "360p", "240p", "144p", "1080p"])
 chooseResolution.pack(padx=10, pady=10)
 
-warningText = customtkinter.CTkLabel(app, text='Warning: 1080p downloads take a long time as there are many more steps to getting a 1080p YouTube video than just \ndownloading, please consider downloading 720p unless you absolutely have to get 1080p video. \nA 1080p download is complete when the download buttons are no longer greyed-out.', text_color='orange')
+warningText = customtkinter.CTkLabel(app, text='Warning: 1080p downloads take a long time as there are many more steps to getting a 1080p YouTube video than just \ndownloading, please consider downloading 720p unless you absolutely have to get 1080p video. \nA 1080p download is complete when the download buttons are no longer greyed-out.\nIf app freezes, this is normal, once it starts responding again after a while the download will most likey be done.', text_color='orange')
 warningText.pack()
 
 choosefolder = customtkinter.CTkButton(app, text="Choose where to download", command=select_folder)
