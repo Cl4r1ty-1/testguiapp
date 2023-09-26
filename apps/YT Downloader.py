@@ -114,6 +114,10 @@ def select_folder():
     file_path = filedialog.askdirectory()
     folder_chosen.configure(text=file_path)
 
+print("Welcome to YTDownloader! The purpose of this console window is to show you the progress of 1080p downloads, other than that you can pretty much ignore it.")
+print()
+print("Loading...")
+
 customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("blue")
 
