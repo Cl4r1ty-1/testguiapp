@@ -4,6 +4,9 @@ import customtkinter
 from pytube import YouTube
 from pytube import exceptions
 from tkinter import filedialog
+from datetime import datetime
+from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
+
 
 def startDownload():
     try:
@@ -12,11 +15,34 @@ def startDownload():
         downloadmp3.configure(state='disabled')
         ytLink = link.get()
         ytObject = YouTube(ytLink, on_progress_callback=on_progress)
-        video = ytObject.streams.get_by_resolution(resolution=chooseResolution.get())
-        title.configure(text=ytObject.title, text_color='white')
-        finishLabel.configure(text='')
+        if chooseResolution.get() == '1080p':
+            for i in ytObject.streams.filter(resolution='1080p'):
+                if i.mime_type == 'video/mp4':
+                    streamId = i.itag
+            video = ytObject.streams.get_by_itag(streamId)
+            title.configure(text=ytObject.title, text_color='white')
+            finishLabel.configure(text='')
+            video_file = video.download(output_path=file_path, filename_prefix='video_')
+            for i in ytObject.streams.filter(only_audio=True):
+                if i.mime_type == "audio/mp4":
+                    audioStreamId = i.itag
+            audio = ytObject.streams.get_by_itag(audioStreamId)
+            audio_file = audio.download(output_path=file_path, filename_prefix='audio_')
+            video_clip = VideoFileClip(video_file)
+            audio_clip = AudioFileClip(audio_file)
+            final_clip = video_clip.set_audio(audio_clip)
+            now = datetime.now()
+            dt_string = now.strftime(" %d%m%Y %H%M%S")
+            final_clip.write_videofile(file_path + '/' + 'YouTubeDownload' + dt_string + '.mp4')
+            os.remove(audio_file)
+            os.remove(video_file)
 
-        video.download(output_path=file_path)
+        else:
+            video = ytObject.streams.get_by_resolution(resolution=chooseResolution.get())
+            title.configure(text=ytObject.title, text_color='white')
+            finishLabel.configure(text='')
+
+            video.download(output_path=file_path)
         finishLabel.configure(text="Download Complete!", text_color='white')
         downloadmp3.configure(state='normal')
         download.configure(state='normal')
@@ -36,6 +62,7 @@ def startDownload():
         finishLabel.configure(text="An unknown error occurred. Please contact devs.", text_color='red')
         download.configure(state='normal')
         downloadmp3.configure(state='normal')
+
 
 def startAudioDownload():
     try: 
@@ -87,23 +114,30 @@ def select_folder():
     file_path = filedialog.askdirectory()
     folder_chosen.configure(text=file_path)
 
+print("Welcome to YTDownloader! The purpose of this console window is to show you the progress of 1080p downloads, other than that you can pretty much ignore it.")
+print()
+print("Loading...")
+
 customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("blue")
 
 app = customtkinter.CTk()
-app.geometry("720x480")
+app.geometry("870x550")
 app.title("YT Downloader")
 
 title = customtkinter.CTkLabel(app, text="Insert a YouTube Link")
 title.pack(padx=10, pady=10)
 
 url_var = tkinter.StringVar()
-link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
+link = customtkinter.CTkEntry(app, width=400, height=40, textvariable=url_var)
 link.pack(pady=5)
 
 resolution = tkinter.StringVar()
-chooseResolution = customtkinter.CTkOptionMenu(app, values=["720p", "480p", "360p", "240p", "144p"])
+chooseResolution = customtkinter.CTkOptionMenu(app, values=["720p", "480p", "360p", "240p", "144p", "1080p"])
 chooseResolution.pack(padx=10, pady=10)
+
+warningText = customtkinter.CTkLabel(app, text='Warning: 1080p downloads take a long time as there are many more steps to getting a 1080p YouTube video than just \ndownloading, please consider downloading 720p unless you absolutely have to get 1080p video. \nA 1080p download is complete when the download buttons are no longer greyed-out.\nIf app freezes, this is normal, once it starts responding again after a while the download will most likey be done.', text_color='orange')
+warningText.pack()
 
 choosefolder = customtkinter.CTkButton(app, text="Choose where to download", command=select_folder)
 choosefolder.pack(padx=10, pady=10)
