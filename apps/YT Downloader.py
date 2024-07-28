@@ -1,8 +1,8 @@
 import os
 import tkinter
 import customtkinter
-from pytube import YouTube
-from pytube import exceptions
+from pytubefix import YouTube
+from pytubefix import exceptions
 from tkinter import filedialog
 from datetime import datetime
 from moviepy.editor import VideoFileClip, AudioFileClip
