@@ -5,7 +5,7 @@ from pytube import YouTube
 from pytube import exceptions
 from tkinter import filedialog
 from datetime import datetime
-from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
+from moviepy.editor import VideoFileClip, AudioFileClip
 
 
 def startDownload():
@@ -47,7 +47,7 @@ def startDownload():
         downloadmp3.configure(state='normal')
         download.configure(state='normal')
     except AttributeError:
-        finishLabel.configure(text="Try either 720p or 360p.", text_color='red')
+        finishLabel.configure(text="Try either 720p or 360p. If 720p is selected it may not be avaliable for download for this video, please try 1080p (may take a few minutes) or 360p", text_color='red')
         download.configure(state='normal')
         downloadmp3.configure(state='normal')
     except exceptions.RegexMatchError:
